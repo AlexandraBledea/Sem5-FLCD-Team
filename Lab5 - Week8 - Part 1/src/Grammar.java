@@ -6,15 +6,14 @@ import java.util.stream.Collectors;
 public class Grammar {
 
 
-    private final String ELEMENT_SEPARATOR = ";;";
+    private final String ELEMENT_SEPARATOR = "&";
 
-    private final String TRANSITION_OR_SEPARATOR = "\\|";
-
+    private final String SEPARATOR_OR_TRANSITION = "\\|";
     private final String TRANSITION_CONCATENATION = " ";
     private final String EPSILON = "EPS";
     private final String SEPARATOR_LEFT_RIGHT_HAND_SIDE = "->";
 
-    // LL1
+    // LR(0)
     private Set<String> nonTerminals;
     private Set<String> terminals;
     private Map<List<String>, Set<List<String>>> productions;
@@ -22,10 +21,18 @@ public class Grammar {
     private boolean isCFG;
 
 
+    /**
+     * With this method we first:
+     * -> Split the production by the left right hand side separator ("->")
+     * -> Then we split the left hand side by space (we can have A B -> something)
+     * -> Then we split the right hand side by "|".
+     * -> We go through each production from the right hand side and format each of the in order to be added to the map
+     * @param production -> represents the production we are about to work
+     */
     private void processProduction(String production) {
         String[] leftAndRightHandSide = production.split(this.SEPARATOR_LEFT_RIGHT_HAND_SIDE);
         List<String> splitLHS = List.of(leftAndRightHandSide[0].split(this.TRANSITION_CONCATENATION));
-        String[] splitRHS = leftAndRightHandSide[1].split(this.TRANSITION_OR_SEPARATOR);
+        String[] splitRHS = leftAndRightHandSide[1].split(this.SEPARATOR_OR_TRANSITION);
 
         this.productions.putIfAbsent(splitLHS, new HashSet<>());
         for (int i = 0; i < splitRHS.length; i++) {
@@ -33,6 +40,11 @@ public class Grammar {
         }
     }
 
+    /**
+     * With this method we load the content from the file (we read every line from the file and
+     * classify everything we read as a terminal/non-terminal/production and so on).
+     * @param filePath - the path where the file we are reading from is
+     */
     private void loadFromFile(String filePath) {
         try (Scanner scanner = new Scanner(new File(filePath))) {
             this.nonTerminals = new HashSet<>(List.of(scanner.nextLine().split(this.ELEMENT_SEPARATOR)));
@@ -57,7 +69,7 @@ public class Grammar {
         }
 
         for (List<String> leftHandSide : this.productions.keySet()) {
-            // On the left hand side we need to have only one element (A -> a, not AB -> a, where A and B are different non terminals)
+            // On the left hand side we need to have only one element (A -> a, not AB -> a, where A and B are different non-terminals)
             if (leftHandSide.size() != 1 || !this.nonTerminals.contains(leftHandSide.get(0))) {
                 return false;
             }

@@ -15,7 +15,7 @@ public class Main {
     }
 
     public static void runGrammar(){
-        Grammar grammar = new Grammar("Input_Output/G1.txt");
+        Grammar grammar = new Grammar("Input_Output/G2.txt");
         System.out.println("Non terminals - " + grammar.getNonTerminals());
         System.out.println("Terminals - " + grammar.getTerminals());
         System.out.println("Starting symbol - " + grammar.getStartingSymbol());
