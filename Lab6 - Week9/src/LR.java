@@ -46,7 +46,7 @@ public class LR {
      * @param item - the analysis element
      * @return - the closure for item given as input
      */
-    private State closure(Item item){
+    public State closure(Item item){
 
         Set<Item> oldClosure;
         Set<Item> currentClosure = Set.of(item);
@@ -77,7 +77,7 @@ public class LR {
      * @return - returns a State containing  a list of states
      * composed of the states for each computer closure
      */
-    private State goTo(State state, String elem) {
+    public State goTo(State state, String elem) {
         Set<Item> result = new LinkedHashSet<>();
 
         for (Item i : state.getItems()) {
@@ -129,4 +129,11 @@ public class LR {
 
     }
 
+    public Grammar getGrammar() {
+        return grammar;
+    }
+
+    public Grammar getWorkingGrammar() {
+        return workingGrammar;
+    }
 }

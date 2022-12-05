@@ -24,6 +24,8 @@ public class Main {
         System.out.println("4. Print all productions");
         System.out.println("5. Print all productions for a non terminal");
         System.out.println("6. Is the grammar a context free grammar (CFG) ?");
+        System.out.println("7. Run LR ");
+        System.out.println("8. Run tests");
 
     }
 
@@ -73,6 +75,13 @@ public class Main {
                     LR lrAlg = new LR(grammar1);
 
                     System.out.println(lrAlg.canonicalCollection().getStates());
+                    break;
+                case 8:
+                    Tests test = new Tests();
+                    test.runAllClosureTest();
+                    test.runAllGoToTests();
+                    test.runAllCanonicalTests();
+                    break;
 
             }
         }
