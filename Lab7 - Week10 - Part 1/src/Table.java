@@ -1,9 +1,14 @@
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Table {
 
     public Map<Integer, Row> tableRow;
+
+    Table(){
+        tableRow = new HashMap<>();
+    }
 
     @Override
     public String toString(){

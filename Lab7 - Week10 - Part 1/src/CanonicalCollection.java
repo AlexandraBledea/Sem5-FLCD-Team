@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CanonicalCollection {
 
@@ -10,12 +7,16 @@ public class CanonicalCollection {
 
     public CanonicalCollection(){
         this.states = new ArrayList<>();
-        this.adjacencyList = new HashMap<>();
+        this.adjacencyList = new TreeMap<>();
     }
 
     public CanonicalCollection(List<State> states, Map<Pair<Integer, String>, Integer> adjacencyList) {
         this.states = states;
         this.adjacencyList = adjacencyList;
+    }
+
+    public void connectStates(Integer indexFirstState, String symbol, Integer indexSecondState){
+        this.adjacencyList.put(new Pair<>(indexFirstState, symbol), indexSecondState);
     }
 
     public void addState(State state){

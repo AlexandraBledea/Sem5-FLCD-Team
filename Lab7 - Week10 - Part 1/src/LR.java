@@ -11,7 +11,7 @@ public class LR {
     public LR(Grammar grammar) throws Exception {
         this.grammar = grammar;
 
-        if(this.grammar.getIsEnriched()){
+        if (this.grammar.getIsEnriched()) {
             this.workingGrammar = this.grammar;
         } else {
             this.workingGrammar = this.grammar.getEnrichedGrammar();
@@ -22,19 +22,19 @@ public class LR {
 
     /**
      * With this method we get the non-terminal which is preceded by dot
+     *
      * @param item - the item in which we look for the non-terminal
      * @return - the non-terminal if it is found or null otherwise
      */
-    public String getNonTerminalPrecededByDot(Item item){
+    public String getNonTerminalPrecededByDot(Item item) {
         try {
             String term = item.getRightHandSide().get(item.getPositionForDot());
-            if(!grammar.getNonTerminals().contains(term)){
+            if (!grammar.getNonTerminals().contains(term)) {
                 return null;
             }
 
             return term;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
 
@@ -43,10 +43,11 @@ public class LR {
 
     /**
      * With this method we compute the closure for an item (an item being of the form [A->alpha.beta])
+     *
      * @param item - the analysis element
      * @return - the closure for item given as input
      */
-    public State closure(Item item){
+    public State closure(Item item) {
 
         Set<Item> oldClosure;
         Set<Item> currentClosure = Set.of(item);
@@ -54,17 +55,17 @@ public class LR {
         do {
             oldClosure = currentClosure;
             Set<Item> newClosure = new LinkedHashSet<>(currentClosure);
-            for(Item i: currentClosure){
+            for (Item i : currentClosure) {
                 String nonTerminal = getNonTerminalPrecededByDot(i);
-                if(nonTerminal != null){
-                    for(List<String> prod:  grammar.getProductionsForNonTerminal(nonTerminal)){
+                if (nonTerminal != null) {
+                    for (List<String> prod : grammar.getProductionsForNonTerminal(nonTerminal)) {
                         Item currentItem = new Item(nonTerminal, prod, 0);
                         newClosure.add(currentItem);
                     }
                 }
             }
             currentClosure = newClosure;
-        } while(!oldClosure.equals(currentClosure));
+        } while (!oldClosure.equals(currentClosure));
 
         return new State(currentClosure);
     }
@@ -72,8 +73,9 @@ public class LR {
     /**
      * With this method, in state S, we search LR(0) item that has dot in front of symbol X.
      * Move the dot after symbol X and call closure for this new item.
+     *
      * @param state - the state S from which we want to move
-     * @param elem - the symbol after we look
+     * @param elem  - the symbol after we look
      * @return - returns a State containing  a list of states
      * composed of the states for each computer closure
      */
@@ -88,7 +90,7 @@ public class LR {
                     State newState = closure(nextItem);
                     result.addAll(newState.getItems());
                 }
-            } catch(Exception ignored) {
+            } catch (Exception ignored) {
             }
         }
 
@@ -97,9 +99,10 @@ public class LR {
 
     /**
      * With this method we compute the canonical collection for the grammar.
+     *
      * @return - the formed canonical collection
      */
-    public CanonicalCollection canonicalCollection(){
+    public CanonicalCollection canonicalCollection() {
         CanonicalCollection canonicalCollection = new CanonicalCollection();
 
         canonicalCollection.addState(
@@ -113,14 +116,16 @@ public class LR {
         );
 
         int index = 0;
-        while(index < canonicalCollection.getStates().size()){
-            for(String symbol: canonicalCollection.getStates().get(index).getSymbolsSucceedingTheDot()) {
+        while (index < canonicalCollection.getStates().size()) {
+            for (String symbol : canonicalCollection.getStates().get(index).getSymbolsSucceedingTheDot()) {
                 State newState = goTo(canonicalCollection.getStates().get(index), symbol);
                 if (newState.getItems().size() != 0) {
                     int indexState = canonicalCollection.getStates().indexOf(newState);
                     if (indexState == -1) {
                         canonicalCollection.addState(newState);
+                        indexState = canonicalCollection.getStates().size() - 1;
                     }
+                    canonicalCollection.connectStates(index, symbol, indexState);
                 }
             }
             ++index;
@@ -129,6 +134,20 @@ public class LR {
 
     }
 
+    public Table getParsingTable() {
+        CanonicalCollection canonicalCollection = new CanonicalCollection();
+        Table table = new Table();
+        canonicalCollection.getAdjacencyList().entrySet().forEach(i -> {
+                    State state = canonicalCollection.getStates().get(i.getKey().getFirst());
+                    if (table.tableRow.containsKey(i.getKey().getFirst())) {
+                        table.tableRow.replace(i.getKey().getFirst(), new Row(state.getStateActionType(), new HashMap<>(), null));
+                    }
+                    table.tableRow.get(i.getKey().getFirst()).getGoTo().replace(i.getKey().getSecond(), i.getValue());
+                }
+        );
+
+        return table;
+    }
 
 
     public Grammar getGrammar() {

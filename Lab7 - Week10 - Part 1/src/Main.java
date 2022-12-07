@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.StreamSupport;
 
@@ -75,19 +76,26 @@ public class Main {
                     Grammar grammar1 = new Grammar("Input_Output/G1.txt");
                     LR lrAlg = new LR(grammar1);
 
-                    System.out.println(lrAlg.canonicalCollection().getStates());
+                    CanonicalCollection canonicalCollection = lrAlg.canonicalCollection();
+
+                    System.out.println("States");
+
+                    for(int i = 0; i < canonicalCollection.getStates().size(); i++){
+                        System.out.println(i + " " + canonicalCollection.getStates().get(i));
+                    }
+
+//                    System.out.println("\nState transitions");
+//
+//                    for(Map.Entry<Pair<Integer, String>, Integer> entry: canonicalCollection.getAdjacencyList().entrySet()){
+//                        System.out.println(entry.getKey() + " -> " + entry.getValue());
+//                    }
+
                     break;
                 case 8:
                     Tests test = new Tests();
                     test.runAllClosureTest();
                     test.runAllGoToTests();
                     test.runAllCanonicalTests();
-                    break;
-
-                case 9:
-
-
-
                     break;
 
             }

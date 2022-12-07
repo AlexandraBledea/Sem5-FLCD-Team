@@ -10,10 +10,15 @@ public class State {
 
     public State(Set<Item> states){
         this.items = states;
+        this.setActionForState();
     }
 
     public Set<Item> getItems(){
         return items;
+    }
+
+    public StateActionType getStateActionType(){
+        return this.stateActionType;
     }
 
     public List<String> getSymbolsSucceedingTheDot(){
