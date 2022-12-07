@@ -16,11 +16,6 @@ public class State {
         return items;
     }
 
-    @Override
-    public String toString(){
-        return items.toString();
-    }
-
     public List<String> getSymbolsSucceedingTheDot(){
         Set<String> symbols = new LinkedHashSet<>();
 
@@ -55,6 +50,11 @@ public class State {
         }
 
         return false;
+    }
+
+    @Override
+    public String toString(){
+        return stateActionType + " - " + items;
     }
 
 }

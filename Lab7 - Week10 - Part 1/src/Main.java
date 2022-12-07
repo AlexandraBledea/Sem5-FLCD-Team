@@ -27,6 +27,7 @@ public class Main {
         System.out.println("7. Run LR ");
         System.out.println("8. Run tests");
 
+        System.out.println("9. Run another LR");
     }
 
     public static void runGrammar() throws Exception {
@@ -81,6 +82,12 @@ public class Main {
                     test.runAllClosureTest();
                     test.runAllGoToTests();
                     test.runAllCanonicalTests();
+                    break;
+
+                case 9:
+
+
+
                     break;
 
             }
