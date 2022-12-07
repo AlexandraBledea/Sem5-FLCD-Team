@@ -5,8 +5,8 @@ import java.util.*;
  */
 public class State {
 
+    private StateActionType stateActionType;
     private Set<Item> items;
-
 
     public State(Set<Item> states){
         this.items = states;
@@ -30,6 +30,17 @@ public class State {
         }
 
         return new ArrayList<>(symbols);
+    }
+
+    public void setActionForState(){
+        if(items.size() == 1 && ((Item)items.toArray()[0]).getRightHandSide().size() == ((Item)items.toArray()[0]).getPositionForDot() && ((Item)this.items.toArray()[0]).getLeftHandSide() == Grammar.enrichedStartingGrammarSymbol){
+            this.stateActionType = StateActionType.ACCEPT;
+        } else if(items.size() == 1 && ((Item) items.toArray()[0]).getRightHandSide().size() == ((Item) items.toArray()[0]).getPositionForDot())
+        {
+            this.stateActionType = StateActionType.REDUCE;
+        } else if(items.size() > 1 && this.items.stream().allMatch(i -> i.getRightHandSide().size() > i.getPositionForDot())){
+            this.stateActionType = StateActionType.SHIFT;
+        }
     }
 
     @Override

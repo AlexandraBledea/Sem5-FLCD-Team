@@ -6,7 +6,7 @@ public class LR {
     private final Grammar grammar;
 
     private final Grammar workingGrammar;
-    private List<Pair<String, List<String>>> orderedProductions;
+    private List<Pair<String, List<String>>>  orderedProductions;
 
     public LR(Grammar grammar) throws Exception {
         this.grammar = grammar;
