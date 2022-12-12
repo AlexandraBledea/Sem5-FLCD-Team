@@ -17,10 +17,18 @@ public class State {
         return items;
     }
 
+    /**
+     * With this method we get the action type for a state
+     * @return - the action type for the state
+     */
     public StateActionType getStateActionType(){
         return this.stateActionType;
     }
 
+    /**
+     * With this method we get the symbols which come after the dot
+     * @return a list with the corresponding symbols
+     */
     public List<String> getSymbolsSucceedingTheDot(){
         Set<String> symbols = new LinkedHashSet<>();
 
@@ -32,6 +40,10 @@ public class State {
         return new ArrayList<>(symbols);
     }
 
+    /**
+     * With this method we set the action for the state.
+     * The action can be: SHIFT, REDUCE, ACCEPT, REDUCE_REDUCE_CONFLICT or SHIFT_REDUCE_CONFLICT
+     */
     public void setActionForState(){
         if(items.size() == 1 && ((Item)items.toArray()[0]).getRightHandSide().size() == ((Item)items.toArray()[0]).getPositionForDot() && ((Item)this.items.toArray()[0]).getLeftHandSide() == Grammar.enrichedStartingGrammarSymbol){
             this.stateActionType = StateActionType.ACCEPT;
