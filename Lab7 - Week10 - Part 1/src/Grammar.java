@@ -55,7 +55,7 @@ public class Grammar {
             this.terminals = new LinkedHashSet<>(List.of(scanner.nextLine().split(this.ELEMENT_SEPARATOR)));
             this.startingSymbol = scanner.nextLine();
 
-            this.productions = new HashMap<>();
+            this.productions = new LinkedHashMap<>();
             while (scanner.hasNextLine()) {
                 this.processProduction(scanner.nextLine());
             }
@@ -110,6 +110,7 @@ public class Grammar {
         return this.isEnriched;
     }
     public Grammar(String filePath) {
+        this.productions = new LinkedHashMap<>();
         this.loadFromFile(filePath);
     }
 

@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -7,17 +8,20 @@ public class Table {
     public Map<Integer, Row> tableRow;
 
     Table(){
-        tableRow = new HashMap<>();
+        tableRow = new LinkedHashMap<>();
     }
 
     @Override
     public String toString(){
-        final String [] result = new String[1];
+        StringBuilder stringBuilder = new StringBuilder();
 
-        tableRow.forEach((rowIndex, row) -> {
-            result[0] += new AtomicReference<String>(rowIndex + ": " + row + "\n");
-        });
+        for(Integer key: tableRow.keySet()){
+            stringBuilder.append(key);
+            stringBuilder.append(": ");
+            stringBuilder.append(tableRow.get(key));
+            stringBuilder.append("\n");
+        }
 
-        return result[0];
+        return stringBuilder.toString();
     }
 }

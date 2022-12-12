@@ -7,7 +7,7 @@ public class CanonicalCollection {
 
     public CanonicalCollection(){
         this.states = new ArrayList<>();
-        this.adjacencyList = new TreeMap<>();
+        this.adjacencyList = new LinkedHashMap<>();
     }
 
     public CanonicalCollection(List<State> states, Map<Pair<Integer, String>, Integer> adjacencyList) {

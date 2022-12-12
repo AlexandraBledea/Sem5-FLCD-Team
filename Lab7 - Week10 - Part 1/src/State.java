@@ -6,7 +6,7 @@ import java.util.*;
 public class State {
 
     private StateActionType stateActionType;
-    private Set<Item> items;
+    private final Set<Item> items;
 
     public State(Set<Item> states){
         this.items = states;
@@ -40,6 +40,10 @@ public class State {
             this.stateActionType = StateActionType.REDUCE;
         } else if(items.size() > 1 && this.items.stream().allMatch(i -> i.getRightHandSide().size() > i.getPositionForDot())){
             this.stateActionType = StateActionType.SHIFT;
+        } else if(items.size() > 1 && this.items.stream().allMatch(i -> i.getRightHandSide().size() == i.getPositionForDot())){
+            this.stateActionType = StateActionType.REDUCE_REDUCE_CONFLICT;
+        } else {
+            this.stateActionType = StateActionType.SHIFT_REDUCE_CONFLICT;
         }
     }
 

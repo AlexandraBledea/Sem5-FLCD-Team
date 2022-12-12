@@ -125,6 +125,7 @@ public class LR {
                         canonicalCollection.addState(newState);
                         indexState = canonicalCollection.getStates().size() - 1;
                     }
+//                    System.out.println("(" + index + ", " + symbol + ") -> " + indexState);
                     canonicalCollection.connectStates(index, symbol, indexState);
                 }
             }
@@ -134,17 +135,82 @@ public class LR {
 
     }
 
-    public Table getParsingTable() {
-        CanonicalCollection canonicalCollection = new CanonicalCollection();
+    /**
+     * With this method we create the parsing table, if possible and detect conflicts if there are any
+     * @return - the parsing table corresponding to the parsed grammar if we don't have conflicts
+     *         - otherwise, return a table with no rows in it
+     */
+    public Table getParsingTable(CanonicalCollection canonicalCollection) {
         Table table = new Table();
-        canonicalCollection.getAdjacencyList().entrySet().forEach(i -> {
-                    State state = canonicalCollection.getStates().get(i.getKey().getFirst());
-                    if (table.tableRow.containsKey(i.getKey().getFirst())) {
-                        table.tableRow.replace(i.getKey().getFirst(), new Row(state.getStateActionType(), new HashMap<>(), null));
-                    }
-                    table.tableRow.get(i.getKey().getFirst()).getGoTo().replace(i.getKey().getSecond(), i.getValue());
+
+        boolean foundConflicts = false;
+
+        //SHIFT CASE ACTION
+        for(Map.Entry<Pair<Integer, String>, Integer> entry: canonicalCollection.getAdjacencyList().entrySet()) {
+
+            Pair<Integer, String> key = entry.getKey();
+            Integer value = entry.getValue();
+
+            // If the state is not in the table, we create an entry for it, we set the action -> SHIFT
+            State state = canonicalCollection.getStates().get(key.getFirst());
+
+            if (state.getStateActionType() == StateActionType.SHIFT) {
+                if (!table.tableRow.containsKey(key.getFirst())) {
+                    table.tableRow.put(key.getFirst(), new Row(state.getStateActionType(), new HashMap<>(), null));
                 }
-        );
+
+                //We update the goTo columns with the corresponding states
+                table.tableRow.get(key.getFirst()).getGoTo().put(key.getSecond(), value);
+            }
+
+            if(state.getStateActionType() == StateActionType.SHIFT_REDUCE_CONFLICT || state.getStateActionType() == StateActionType.REDUCE_REDUCE_CONFLICT){
+                foundConflicts = true;
+                Integer stateIndex = key.getFirst();
+
+                for(Map.Entry<Pair<Integer, String>, Integer> e2: canonicalCollection.getAdjacencyList().entrySet()) {
+                    Pair<Integer, String> k2 = e2.getKey();
+                    Integer v2 = e2.getValue();
+
+                    if(v2.equals(stateIndex)){
+                        System.out.println("STATE INDEX -> " + stateIndex);
+                        System.out.println("SYMBOL -> " + k2.getSecond());
+                        System.out.println("INITIAL STATE -> " + k2.getFirst());
+                        System.out.println("( " + k2.getFirst() + ", " + k2.getSecond() + " )" + " -> " + stateIndex);
+                        System.out.println("STATE -> " + state);
+                    }
+
+                }
+
+            }
+
+        }
+
+        // We go through each state and check if its action is REDUCE or ACCEPT
+        for(int i = 0; i < canonicalCollection.getStates().size(); i++){
+
+            State state = canonicalCollection.getStates().get(i);
+
+            // REDUCE CASE ACTION
+
+            if(state.getStateActionType() == StateActionType.REDUCE){
+                // If the action is reduce, we look for the production index of the reduction
+                Integer integer = orderedProductions.indexOf(new Pair<>(((Item)state.getItems().toArray()[0]).getLeftHandSide(), (((Item) state.getItems().toArray()[0]).getRightHandSide())));
+                table.tableRow.put(i, new Row(state.getStateActionType(), null, integer));
+            }
+
+            // ACCEPT CASE ACTION
+            if(state.getStateActionType() == StateActionType.ACCEPT){
+                table.tableRow.put(i, new Row(state.getStateActionType(), null, null));
+            }
+
+        }
+
+        // We order the table rows based on the state index (increasing order)
+        table.tableRow = new TreeMap<>(table.tableRow);
+
+        if(foundConflicts){
+            return new Table();
+        }
 
         return table;
     }
@@ -158,3 +224,4 @@ public class LR {
         return workingGrammar;
     }
 }
+

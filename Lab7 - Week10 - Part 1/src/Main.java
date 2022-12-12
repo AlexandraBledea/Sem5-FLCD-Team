@@ -32,7 +32,7 @@ public class Main {
     }
 
     public static void runGrammar() throws Exception {
-        Grammar grammar = new Grammar("Input_Output/G2.txt");
+        Grammar grammar = new Grammar("Input_Output/G1.txt");
         boolean notStopped = true;
         while(notStopped) {
             printMenu();
@@ -84,11 +84,22 @@ public class Main {
                         System.out.println(i + " " + canonicalCollection.getStates().get(i));
                     }
 
-//                    System.out.println("\nState transitions");
-//
-//                    for(Map.Entry<Pair<Integer, String>, Integer> entry: canonicalCollection.getAdjacencyList().entrySet()){
-//                        System.out.println(entry.getKey() + " -> " + entry.getValue());
-//                    }
+                    System.out.println("\nState transitions");
+
+                    for(Map.Entry<Pair<Integer, String>, Integer> entry: canonicalCollection.getAdjacencyList().entrySet()){
+                        System.out.println(entry.getKey() + " -> " + entry.getValue());
+                    }
+
+                    System.out.println();
+
+                    Table parsingTable = lrAlg.getParsingTable(canonicalCollection);
+                    if(parsingTable.tableRow.size() == 0){
+                        System.out.println("We have conflicts in the parsing table so we can't go further with the algorithm");
+                    }
+                    else {
+                        System.out.println(parsingTable);
+                    }
+
 
                     break;
                 case 8:
