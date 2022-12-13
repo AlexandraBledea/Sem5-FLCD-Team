@@ -1,7 +1,7 @@
 program&statement&statement_list&compound_statement&add_expression&subtract_expression&multiply_expression&divide_expression&arr_expression&iostmt&simple_type&array_declaration&declaration&assignment_statement&if_statement&while_statement&return_statement&for_statement&for_header&condition&relation&
 start&;&{&}&+&-&*&/&)&(&read&write&IDENTIFIER&CONST&array&[&]&=&if&else&while&return&for&int&string&char&<&<=&==&!=&>=&>&
 program
-program->compound_statement
+program->start compound_statement
 statement->declaration|assignment_statement|if_statement|while_statement|return_statement|for_statement|iostmt
 statement_list->statement|statement_list ; statement
 compound_statement->{ statement_list }
