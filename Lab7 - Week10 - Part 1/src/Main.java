@@ -70,7 +70,7 @@ public class Main {
                     System.out.println("\n\nIs it a context free grammar (CFG) ? " + grammar.isCFG());
                     break;
                 case 7:
-                    Grammar grammar1 = new Grammar("Input_Output/G1.txt");
+                    Grammar grammar1 = new Grammar("Input_Output/G2.txt");
                     LR lrAlg = new LR(grammar1);
 
                     CanonicalCollection canonicalCollection = lrAlg.canonicalCollection();
@@ -89,12 +89,12 @@ public class Main {
 
                     System.out.println();
 
-                    Table parsingTable = lrAlg.getParsingTable(canonicalCollection);
-                    if(parsingTable.tableRow.size() == 0){
+                    ParsingTable parsingTable = lrAlg.getParsingTable(canonicalCollection);
+                    if(parsingTable.entries.size() == 0){
                         System.out.println("We have conflicts in the parsing table so we can't go further with the algorithm");
                     }
                     else {
-                        System.out.println(parsingTable);
+                        System.out.println(parsingTable.toString());
                     }
 
                     Stack<String> word = new Stack<>();
@@ -103,20 +103,27 @@ public class Main {
 //                    word.add("b");
 //                    word.add("a");
                     word.add("}");
+//                    word.add(";");
+//                    word.add("CONST");
+//                    word.add("=");
+//                    word.add("IDENTIFIER");
                     word.add(";");
-                    word.add("CONST");
-                    word.add("=");
                     word.add("IDENTIFIER");
                     word.add("int");
+                    word.add(";");
+                    word.add("]");
+                    word.add("[");
+                    word.add("IDENTIFIER");
+                    word.add("int");
+                    word.add("array");
                     word.add("{");
                     word.add("start");
-                    word.add("program");
-
-                    List<ParsingTreeRow> parseTree = lrAlg.parse(word, parsingTable);
-
-                    for(ParsingTreeRow row: parseTree){
-                        System.out.println(row.getIndex() + ": " + row.getInfo() + ", " + row.getParent() + ", " + row.getRightSibling());
-                    }
+//
+                    lrAlg.parse(word, parsingTable);
+//
+//                    for(ParsingTreeRow row: parseTree){
+//                        System.out.println(row.getIndex() + ": " + row.getInfo() + ", " + row.getParent() + ", " + row.getRightSibling());
+//                    }
 
                     break;
                 case 8:

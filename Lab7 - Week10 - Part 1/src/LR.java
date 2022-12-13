@@ -141,163 +141,167 @@ public class LR {
      * @return - the parsing table corresponding to the parsed grammar if we don't have conflicts
      * - otherwise, return a table with no rows in it
      */
-    public Table getParsingTable(CanonicalCollection canonicalCollection) {
-        Table table = new Table();
+    public ParsingTable getParsingTable(CanonicalCollection canonicalCollection) throws Exception {
+        ParsingTable parsingTable = new ParsingTable();
 
-        boolean foundConflicts = false;
+        for (int i = 0; i < this.canonicalCollection().getStates().size(); i++) {
 
-        //SHIFT CASE ACTION
-        for (Map.Entry<Pair<Integer, String>, Integer> entry : canonicalCollection.getAdjacencyList().entrySet()) {
+            State state = this.canonicalCollection().getStates().get(i);
 
-            Pair<Integer, String> key = entry.getKey();
-            Integer value = entry.getValue();
+            RowTable row = new RowTable();
 
-            // If the state is not in the table, we create an entry for it, we set the action -> SHIFT
-            State state = canonicalCollection.getStates().get(key.getFirst());
+            row.stateIndex = i;
 
-            if (state.getStateActionType() == StateActionType.SHIFT) {
-                if (!table.tableRow.containsKey(key.getFirst())) {
-                    table.tableRow.put(key.getFirst(), new Row(state.getStateActionType(), new HashMap<>(), null));
-                }
-
-                //We update the goTo columns with the corresponding states
-                table.tableRow.get(key.getFirst()).getGoTo().put(key.getSecond(), value);
-            }
+            row.action = state.getStateActionType();
+            row.shifts = new ArrayList<>();
 
             if (state.getStateActionType() == StateActionType.SHIFT_REDUCE_CONFLICT || state.getStateActionType() == StateActionType.REDUCE_REDUCE_CONFLICT) {
-                foundConflicts = true;
-                Integer stateIndex = key.getFirst();
-
                 for (Map.Entry<Pair<Integer, String>, Integer> e2 : canonicalCollection.getAdjacencyList().entrySet()) {
                     Pair<Integer, String> k2 = e2.getKey();
                     Integer v2 = e2.getValue();
 
-                    if (v2.equals(stateIndex)) {
-                        System.out.println("STATE INDEX -> " + stateIndex);
+                    if (v2.equals(row.stateIndex)) {
+                        System.out.println("STATE INDEX -> " + row.stateIndex);
                         System.out.println("SYMBOL -> " + k2.getSecond());
                         System.out.println("INITIAL STATE -> " + k2.getFirst());
-                        System.out.println("( " + k2.getFirst() + ", " + k2.getSecond() + " )" + " -> " + stateIndex);
+                        System.out.println("( " + k2.getFirst() + ", " + k2.getSecond() + " )" + " -> " + row.stateIndex);
                         System.out.println("STATE -> " + state);
+                        break;
+                    }
+                }
+                parsingTable.entries = new ArrayList<>();
+                return parsingTable;
+            } else if (state.getStateActionType() == StateActionType.REDUCE) {
+                Item item = state.getItems().stream().filter(Item::dotIsLast).findAny().orElse(null);
+                if (item != null) {
+                    row.shifts = null;
+                    row.reduceNonTerminal = item.getLeftHandSide();
+                    row.reduceContent = item.getRightHandSide();
+                } else {
+                    throw new Exception("How did you even get here?");
+                }
+            } else if (state.getStateActionType() == StateActionType.ACCEPT) {
+                row.reduceContent = null;
+                row.reduceNonTerminal = null;
+                row.shifts = null;
+            } else if (state.getStateActionType() == StateActionType.SHIFT) {
+
+                List<Pair<String, Integer>> goTos = new ArrayList<>();
+
+                for (Map.Entry<Pair<Integer, String>, Integer> entry : canonicalCollection.getAdjacencyList().entrySet()) {
+
+                    Pair<Integer, String> key = entry.getKey();
+                    if(key.getFirst() == row.stateIndex){
+                        goTos.add(new Pair<>(key.getSecond(), entry.getValue()));
+                    }
+                }
+
+                row.shifts = goTos;
+                row.reduceContent = null;
+                row.reduceNonTerminal = null;
+            }
+
+            parsingTable.entries.add(row);
+        }
+
+        return parsingTable;
+    }
+
+
+    public void parse(Stack<String> inputStack, ParsingTable parsingTable){
+        Stack<Pair<String, Integer>> workingStack = new Stack<>();
+        Stack<String> outputStack = new Stack<>();
+        Stack<Integer> outputNumberStack = new Stack<>();
+
+        String lastSymbol = "";
+        int stateIndex = 0;
+
+        boolean sem = true;
+
+        workingStack.push(new Pair<>(lastSymbol, stateIndex));
+        RowTable lastRow = null;
+        String onErrorSymbol = null;
+
+        try {
+            do{
+                if(!inputStack.isEmpty()){
+                    // We keep the symbol before which an error might occur
+                    onErrorSymbol = inputStack.peek();
+                }
+                // We update the last row from the table we worked with
+                lastRow = parsingTable.entries.get(stateIndex);
+
+                // We take a copy of the entry from the table and work on it
+                RowTable entry = parsingTable.entries.get(stateIndex);
+
+                if(entry.action.equals(StateActionType.SHIFT)) {
+                    // If the action is shift, we pop from the input stack
+                    // We look at the last added state from the working stack
+                    // Look into the parsing table at that state, and find out
+                    // From it through what state, we can obtain the symbol popped from the input stack
+                    String symbol = inputStack.pop();
+                    Pair<String, Integer> state = entry.shifts.stream().filter(it -> it.getFirst().equals(symbol)).findAny().orElse(null);
+
+                    if (state != null) {
+                        stateIndex = state.getSecond();
+                        lastSymbol = symbol;
+                        workingStack.push(new Pair<>(lastSymbol, stateIndex));
+                    }
+                    else {
+                        throw new NullPointerException("Action is SHIFT but there are no matching states");
+                    }
+                } else if(entry.action.equals(StateActionType.REDUCE)){
+
+                    List<String> reduceContent = new ArrayList<>(entry.reduceContent);
+
+                    while(reduceContent.contains(workingStack.peek().getFirst()) && !workingStack.isEmpty()){
+                        reduceContent.remove(workingStack.peek().getFirst());
+                        workingStack.pop();
+                    }
+
+                    // We look into the row of the last state from the working stack
+                    // We look through the shift values and look for the one that corresponds to the reduceNonTerminal
+                    // Basically, we look through which state, from the current one, we can obtain that non-terminal
+                    Pair<String, Integer> state = parsingTable.entries.get(workingStack.peek().getSecond()).shifts.stream()
+                            .filter(it -> it.getFirst().equals(entry.reduceNonTerminal)).findAny().orElse(null);
+
+                    stateIndex = state.getSecond();
+                    lastSymbol = entry.reduceNonTerminal;
+                    workingStack.push(new Pair<>(lastSymbol, stateIndex));
+
+                    outputStack.push(entry.reduceProductionString());
+
+                    // We "form" the production used for reduction and look for its production number
+                    var index = new Pair<>(entry.reduceNonTerminal, entry.reduceContent);
+                    int productionNumber = this.orderedProductions.indexOf(index);
+
+                    outputNumberStack.push(productionNumber);
+                } else {
+                    if(entry.action.equals(StateActionType.ACCEPT)){
+                        List<String> output = new ArrayList<>(outputStack);
+                        Collections.reverse(output);
+                        List<Integer> numberOutput = new ArrayList<>(outputNumberStack);
+                        Collections.reverse(numberOutput);
+
+                        System.out.println("ACCEPTED");
+                        System.out.println("Production strings: " + output);
+                        System.out.println("Production number: " + numberOutput);
+
+                        sem = false;
                     }
 
                 }
 
-            }
 
+
+            }while(sem);
+        } catch (NullPointerException ex){
+            System.out.println("ERROR at state " + stateIndex + " - before symbol " + onErrorSymbol);
+            System.out.println(lastRow);
         }
-
-        // We go through each state and check if its action is REDUCE or ACCEPT
-        for (int i = 0; i < canonicalCollection.getStates().size(); i++) {
-
-            State state = canonicalCollection.getStates().get(i);
-
-            // REDUCE CASE ACTION
-
-            if (state.getStateActionType() == StateActionType.REDUCE) {
-                // If the action is reduce, we look for the production index of the reduction
-                Integer integer = orderedProductions.indexOf(new Pair<>(((Item) state.getItems().toArray()[0]).getLeftHandSide(), (((Item) state.getItems().toArray()[0]).getRightHandSide())));
-                table.tableRow.put(i, new Row(state.getStateActionType(), null, integer));
-            }
-
-            // ACCEPT CASE ACTION
-            if (state.getStateActionType() == StateActionType.ACCEPT) {
-                table.tableRow.put(i, new Row(state.getStateActionType(), null, null));
-            }
-
-        }
-
-        // We order the table rows based on the state index (increasing order)
-        table.tableRow = new TreeMap<>(table.tableRow);
-
-        if (foundConflicts) {
-            return new Table();
-        }
-
-        return table;
-    }
-
-    public List<ParsingTreeRow> parse(Stack<String> inputStack, Table parsingTable) throws Exception {
-        Stack<Pair<String, Integer>> workingStack = new Stack<>();
-        Stack<Integer> outputBand = new Stack<>();
-
-        workingStack.add(new Pair<>("$", 0));
-
-        List<ParsingTreeRow> parsingTree = new ArrayList<>();
-        Stack<Pair<String, Integer>> treeStack = new Stack<>();
-        int currentIndex = 0;
-
-        while (!inputStack.isEmpty() || !workingStack.isEmpty()) {
-            Row tableRow = parsingTable.tableRow.get(workingStack.peek().getSecond());
-            switch (tableRow.action) {
-                case SHIFT:
-                    try
-                    {
-                        String token = inputStack.peek();
-                        Map<String, Integer> goTo = tableRow.getGoTo();
-
-                        if(!goTo.containsKey(token)){
-                            throw new Exception("Invalid symbol " + token + " for goto of state " + workingStack.peek().getSecond());
-                        }
-
-                        Integer stateIndex = goTo.get(token);
-
-                        workingStack.add(new Pair<>(token, stateIndex));
-                        inputStack.pop();
-
-                        treeStack.add(new Pair<>(token, currentIndex++));
-
-                    } catch (Exception e) {
-                        throw new Exception("Action is shift but nothing else is left in the remaining stack");
-                    }
-                    break;
-
-                case ACCEPT:
-                    Pair<String, Integer> lastElement = treeStack.pop();
-                    parsingTree.add(new ParsingTreeRow(
-                            lastElement.getSecond(), lastElement.getFirst(), -1, -1)
-                        );
-                    return parsingTree;
-
-                case REDUCE:
-                    Pair<String, List<String>> productionToReduceTo = orderedProductions.get(tableRow.reductionIndex);
-
-                    Integer parentIndex = currentIndex++;
-                    Integer lastIndex = -1;
-
-                    for(int j = 0; j < productionToReduceTo.getSecond().size(); j++){
-                        workingStack.pop();
-                        Pair<String, Integer> lastElementReduce = treeStack.pop();
-
-                        parsingTree.add(
-                                new ParsingTreeRow(lastElementReduce.getSecond(), lastElementReduce.getFirst(), parentIndex, lastIndex)
-                        );
-
-                        lastIndex = lastElementReduce.getSecond();
-
-                    }
-
-                    treeStack.add(new Pair<>(productionToReduceTo.getFirst(), parentIndex));
-
-                    Pair<String, Integer> previous = workingStack.peek();
-
-                    workingStack.add(
-                            new Pair<>(
-                                    productionToReduceTo.getFirst(),
-                                    parsingTable.tableRow.get(previous.getSecond()).getGoTo().get(productionToReduceTo.getFirst())
-
-                            )
-                    );
-
-                    outputBand.add(0, tableRow.reductionIndex);
-
-                    break;
-            }
-        }
-        throw new Exception("Wrong place to be...");
 
     }
-
-
+    
     public Grammar getGrammar() {
         return grammar;
     }
