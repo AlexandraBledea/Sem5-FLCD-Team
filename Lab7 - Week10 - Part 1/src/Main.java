@@ -105,6 +105,8 @@ public class Main {
 
                     word.add("}");
                     word.add(";");
+                    word.add("CONST");
+                    word.add("=");
                     word.add("IDENTIFIER");
                     word.add("int");
                     word.add(";");
