@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -170,10 +173,16 @@ public class LR {
 
                     if (v2.equals(row.stateIndex)) {
                         System.out.println("STATE INDEX -> " + row.stateIndex);
+                        writeToFile("Input_Output/ParseOutput.txt", "STATE INDEX -> " + row.stateIndex);
                         System.out.println("SYMBOL -> " + k2.getSecond());
+                        writeToFile("Input_Output/ParseOutput.txt", "SYMBOL -> " + k2.getSecond());
                         System.out.println("INITIAL STATE -> " + k2.getFirst());
+                        writeToFile("Input_Output/ParseOutput.txt", "INITIAL STATE -> " + k2.getFirst());
                         System.out.println("( " + k2.getFirst() + ", " + k2.getSecond() + " )" + " -> " + row.stateIndex);
+                        writeToFile("Input_Output/ParseOutput.txt", "( " + k2.getFirst() + ", " + k2.getSecond() + " )" + " -> " + row.stateIndex);
                         System.out.println("STATE -> " + state);
+                        writeToFile("Input_Output/ParseOutput.txt", "STATE -> " + state);
+
                         break;
                     }
                 }
@@ -300,22 +309,31 @@ public class LR {
                         Collections.reverse(numberOutput);
 
                         System.out.println("ACCEPTED");
+                        writeToFile("Input_Output/ParseOutput.txt", "ACCEPTED");
                         System.out.println("Production strings: " + output);
+                        writeToFile("Input_Output/ParseOutput.txt", "Production strings: " + output);
                         System.out.println("Production number: " + numberOutput);
+                        writeToFile("Input_Output/ParseOutput.txt", "Production number: " + numberOutput);
 
                         sem = false;
                     }
 
                 }
-
-
-
-            }while(sem);
+            } while(sem);
         } catch (NullPointerException ex){
             System.out.println("ERROR at state " + stateIndex + " - before symbol " + onErrorSymbol);
             System.out.println(lastRow);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
+    }
 
+    public void writeToFile(String file, String line) throws IOException {
+        FileWriter fw = new FileWriter(file, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(line);
+        bw.newLine();
+        bw.close();
     }
 
     public Grammar getGrammar() {

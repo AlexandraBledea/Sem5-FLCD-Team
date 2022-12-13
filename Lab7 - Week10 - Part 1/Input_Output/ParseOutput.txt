@@ -1,0 +1,446 @@
+States
+
+State transitions
+(0, program) -> 1
+(0, start) -> 2
+(2, compound_statement) -> 3
+(2, {) -> 4
+(4, statement_list) -> 5
+(4, statement) -> 6
+(4, declaration) -> 7
+(4, assignment_statement) -> 8
+(4, if_statement) -> 9
+(4, while_statement) -> 10
+(4, iostmt) -> 11
+(4, simple_type) -> 12
+(4, array_declaration) -> 13
+(4, IDENTIFIER) -> 14
+(4, if) -> 15
+(4, while) -> 16
+(4, read) -> 17
+(4, write) -> 18
+(4, int) -> 19
+(4, string) -> 20
+(4, char) -> 21
+(4, array) -> 22
+(5, }) -> 23
+(5, statement) -> 24
+(5, declaration) -> 7
+(5, assignment_statement) -> 8
+(5, if_statement) -> 9
+(5, while_statement) -> 10
+(5, iostmt) -> 11
+(5, simple_type) -> 12
+(5, array_declaration) -> 13
+(5, IDENTIFIER) -> 14
+(5, if) -> 15
+(5, while) -> 16
+(5, read) -> 17
+(5, write) -> 18
+(5, int) -> 19
+(5, string) -> 20
+(5, char) -> 21
+(5, array) -> 22
+(6, ;) -> 25
+(12, IDENTIFIER) -> 26
+(14, =) -> 27
+(15, () -> 28
+(16, () -> 29
+(17, () -> 30
+(22, simple_type) -> 32
+(22, int) -> 19
+(22, string) -> 20
+(22, char) -> 21
+(24, ;) -> 33
+(27, ar_expression) -> 34
+(28, condition) -> 35
+(28, ar_expression) -> 36
+(29, condition) -> 37
+(29, ar_expression) -> 36
+(30, IDENTIFIER) -> 38
+(31, IDENTIFIER) -> 39
+(31, CONST) -> 40
+(32, IDENTIFIER) -> 41
+(35, )) -> 42
+(36, relation) -> 43
+(36, <) -> 44
+(36, <=) -> 45
+(36, ==) -> 46
+(36, !=) -> 47
+(36, >=) -> 48
+(36, >) -> 49
+(37, )) -> 50
+(38, )) -> 51
+(39, )) -> 52
+(40, )) -> 53
+(41, [) -> 54
+(42, compound_statement) -> 55
+(42, {) -> 4
+(43, ar_expression) -> 56
+(50, compound_statement) -> 57
+(50, {) -> 4
+(54, ]) -> 58
+(55, else) -> 59
+(59, compound_statement) -> 60
+(59, {) -> 4
+Parsing Table: 
+Row: stateIndex= 0, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(program, 1), (start, 2)]
+Row: stateIndex= 1, action='ACCEPT', reduceNonTerminal='null', reduceContent = null, shifts = null
+Row: stateIndex= 2, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 3), ({, 4)]
+Row: stateIndex= 3, action='REDUCE', reduceNonTerminal='program', reduceContent = [start, compound_statement], shifts = null
+Row: stateIndex= 4, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(statement_list, 5), (statement, 6), (declaration, 7), (assignment_statement, 8), (if_statement, 9), (while_statement, 10), (iostmt, 11), (simple_type, 12), (array_declaration, 13), (IDENTIFIER, 14), (if, 15), (while, 16), (read, 17), (write, 18), (int, 19), (string, 20), (char, 21), (array, 22)]
+Row: stateIndex= 5, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(}, 23), (statement, 24), (declaration, 7), (assignment_statement, 8), (if_statement, 9), (while_statement, 10), (iostmt, 11), (simple_type, 12), (array_declaration, 13), (IDENTIFIER, 14), (if, 15), (while, 16), (read, 17), (write, 18), (int, 19), (string, 20), (char, 21), (array, 22)]
+Row: stateIndex= 6, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(;, 25)]
+Row: stateIndex= 7, action='REDUCE', reduceNonTerminal='statement', reduceContent = [declaration], shifts = null
+Row: stateIndex= 8, action='REDUCE', reduceNonTerminal='statement', reduceContent = [assignment_statement], shifts = null
+Row: stateIndex= 9, action='REDUCE', reduceNonTerminal='statement', reduceContent = [if_statement], shifts = null
+Row: stateIndex= 10, action='REDUCE', reduceNonTerminal='statement', reduceContent = [while_statement], shifts = null
+Row: stateIndex= 11, action='REDUCE', reduceNonTerminal='statement', reduceContent = [iostmt], shifts = null
+Row: stateIndex= 12, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 26)]
+Row: stateIndex= 13, action='REDUCE', reduceNonTerminal='declaration', reduceContent = [array_declaration], shifts = null
+Row: stateIndex= 14, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(=, 27)]
+Row: stateIndex= 15, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 28)]
+Row: stateIndex= 16, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 29)]
+Row: stateIndex= 17, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 30)]
+Row: stateIndex= 18, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 31)]
+Row: stateIndex= 19, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [int], shifts = null
+Row: stateIndex= 20, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [string], shifts = null
+Row: stateIndex= 21, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [char], shifts = null
+Row: stateIndex= 22, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(simple_type, 32), (int, 19), (string, 20), (char, 21)]
+Row: stateIndex= 23, action='REDUCE', reduceNonTerminal='compound_statement', reduceContent = [{, statement_list, }], shifts = null
+Row: stateIndex= 24, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(;, 33)]
+Row: stateIndex= 25, action='REDUCE', reduceNonTerminal='statement_list', reduceContent = [statement, ;], shifts = null
+Row: stateIndex= 26, action='REDUCE', reduceNonTerminal='declaration', reduceContent = [simple_type, IDENTIFIER], shifts = null
+Row: stateIndex= 27, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(ar_expression, 34)]
+Row: stateIndex= 28, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(condition, 35), (ar_expression, 36)]
+Row: stateIndex= 29, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(condition, 37), (ar_expression, 36)]
+Row: stateIndex= 30, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 38)]
+Row: stateIndex= 31, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 39), (CONST, 40)]
+Row: stateIndex= 32, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 41)]
+Row: stateIndex= 33, action='REDUCE', reduceNonTerminal='statement_list', reduceContent = [statement_list, statement, ;], shifts = null
+Row: stateIndex= 34, action='REDUCE', reduceNonTerminal='assignment_statement', reduceContent = [IDENTIFIER, =, ar_expression], shifts = null
+Row: stateIndex= 35, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 42)]
+Row: stateIndex= 36, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(relation, 43), (<, 44), (<=, 45), (==, 46), (!=, 47), (>=, 48), (>, 49)]
+Row: stateIndex= 37, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 50)]
+Row: stateIndex= 38, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 51)]
+Row: stateIndex= 39, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 52)]
+Row: stateIndex= 40, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 53)]
+Row: stateIndex= 41, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [([, 54)]
+Row: stateIndex= 42, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 55), ({, 4)]
+Row: stateIndex= 43, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(ar_expression, 56)]
+Row: stateIndex= 44, action='REDUCE', reduceNonTerminal='relation', reduceContent = [<], shifts = null
+Row: stateIndex= 45, action='REDUCE', reduceNonTerminal='relation', reduceContent = [<=], shifts = null
+Row: stateIndex= 46, action='REDUCE', reduceNonTerminal='relation', reduceContent = [==], shifts = null
+Row: stateIndex= 47, action='REDUCE', reduceNonTerminal='relation', reduceContent = [!=], shifts = null
+Row: stateIndex= 48, action='REDUCE', reduceNonTerminal='relation', reduceContent = [>=], shifts = null
+Row: stateIndex= 49, action='REDUCE', reduceNonTerminal='relation', reduceContent = [>], shifts = null
+Row: stateIndex= 50, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 57), ({, 4)]
+Row: stateIndex= 51, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [read, (, IDENTIFIER, )], shifts = null
+Row: stateIndex= 52, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [write, (, IDENTIFIER, )], shifts = null
+Row: stateIndex= 53, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [write, (, CONST, )], shifts = null
+Row: stateIndex= 54, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(], 58)]
+Row: stateIndex= 55, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(else, 59)]
+Row: stateIndex= 56, action='REDUCE', reduceNonTerminal='condition', reduceContent = [ar_expression, relation, ar_expression], shifts = null
+Row: stateIndex= 57, action='REDUCE', reduceNonTerminal='while_statement', reduceContent = [while, (, condition, ), compound_statement], shifts = null
+Row: stateIndex= 58, action='REDUCE', reduceNonTerminal='array_declaration', reduceContent = [array, simple_type, IDENTIFIER, [, ]], shifts = null
+Row: stateIndex= 59, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 60), ({, 4)]
+Row: stateIndex= 60, action='REDUCE', reduceNonTerminal='if_statement', reduceContent = [if, (, condition, ), compound_statement, else, compound_statement], shifts = null
+
+States
+
+State transitions
+(0, program) -> 1
+(0, start) -> 2
+(2, compound_statement) -> 3
+(2, {) -> 4
+(4, statement_list) -> 5
+(4, statement) -> 6
+(4, declaration) -> 7
+(4, assignment_statement) -> 8
+(4, if_statement) -> 9
+(4, while_statement) -> 10
+(4, iostmt) -> 11
+(4, simple_type) -> 12
+(4, array_declaration) -> 13
+(4, IDENTIFIER) -> 14
+(4, if) -> 15
+(4, while) -> 16
+(4, read) -> 17
+(4, write) -> 18
+(4, int) -> 19
+(4, string) -> 20
+(4, char) -> 21
+(4, array) -> 22
+(5, }) -> 23
+(5, statement) -> 24
+(5, declaration) -> 7
+(5, assignment_statement) -> 8
+(5, if_statement) -> 9
+(5, while_statement) -> 10
+(5, iostmt) -> 11
+(5, simple_type) -> 12
+(5, array_declaration) -> 13
+(5, IDENTIFIER) -> 14
+(5, if) -> 15
+(5, while) -> 16
+(5, read) -> 17
+(5, write) -> 18
+(5, int) -> 19
+(5, string) -> 20
+(5, char) -> 21
+(5, array) -> 22
+(6, ;) -> 25
+(12, IDENTIFIER) -> 26
+(14, =) -> 27
+(15, () -> 28
+(16, () -> 29
+(17, () -> 30
+(18, () -> 31
+(22, simple_type) -> 32
+(22, int) -> 19
+(22, string) -> 20
+(22, char) -> 21
+(24, ;) -> 33
+(27, ar_expression) -> 34
+(28, condition) -> 35
+(28, ar_expression) -> 36
+(29, condition) -> 37
+(29, ar_expression) -> 36
+(30, IDENTIFIER) -> 38
+(31, IDENTIFIER) -> 39
+(31, CONST) -> 40
+(32, IDENTIFIER) -> 41
+(35, )) -> 42
+(36, relation) -> 43
+(36, <) -> 44
+(36, <=) -> 45
+(36, ==) -> 46
+(36, !=) -> 47
+(36, >=) -> 48
+(36, >) -> 49
+(37, )) -> 50
+(38, )) -> 51
+(39, )) -> 52
+(40, )) -> 53
+(41, [) -> 54
+(42, compound_statement) -> 55
+(42, {) -> 4
+(43, ar_expression) -> 56
+(50, compound_statement) -> 57
+(50, {) -> 4
+(54, ]) -> 58
+(55, else) -> 59
+(59, compound_statement) -> 60
+(59, {) -> 4
+Parsing Table: 
+Row: stateIndex= 0, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(program, 1), (start, 2)]
+Row: stateIndex= 1, action='ACCEPT', reduceNonTerminal='null', reduceContent = null, shifts = null
+Row: stateIndex= 2, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 3), ({, 4)]
+Row: stateIndex= 3, action='REDUCE', reduceNonTerminal='program', reduceContent = [start, compound_statement], shifts = null
+Row: stateIndex= 4, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(statement_list, 5), (statement, 6), (declaration, 7), (assignment_statement, 8), (if_statement, 9), (while_statement, 10), (iostmt, 11), (simple_type, 12), (array_declaration, 13), (IDENTIFIER, 14), (if, 15), (while, 16), (read, 17), (write, 18), (int, 19), (string, 20), (char, 21), (array, 22)]
+Row: stateIndex= 5, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(}, 23), (statement, 24), (declaration, 7), (assignment_statement, 8), (if_statement, 9), (while_statement, 10), (iostmt, 11), (simple_type, 12), (array_declaration, 13), (IDENTIFIER, 14), (if, 15), (while, 16), (read, 17), (write, 18), (int, 19), (string, 20), (char, 21), (array, 22)]
+Row: stateIndex= 6, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(;, 25)]
+Row: stateIndex= 7, action='REDUCE', reduceNonTerminal='statement', reduceContent = [declaration], shifts = null
+Row: stateIndex= 8, action='REDUCE', reduceNonTerminal='statement', reduceContent = [assignment_statement], shifts = null
+Row: stateIndex= 9, action='REDUCE', reduceNonTerminal='statement', reduceContent = [if_statement], shifts = null
+Row: stateIndex= 10, action='REDUCE', reduceNonTerminal='statement', reduceContent = [while_statement], shifts = null
+Row: stateIndex= 11, action='REDUCE', reduceNonTerminal='statement', reduceContent = [iostmt], shifts = null
+Row: stateIndex= 12, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 26)]
+Row: stateIndex= 13, action='REDUCE', reduceNonTerminal='declaration', reduceContent = [array_declaration], shifts = null
+Row: stateIndex= 14, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(=, 27)]
+Row: stateIndex= 15, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 28)]
+Row: stateIndex= 16, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 29)]
+Row: stateIndex= 17, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 30)]
+Row: stateIndex= 18, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 31)]
+Row: stateIndex= 19, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [int], shifts = null
+Row: stateIndex= 20, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [string], shifts = null
+Row: stateIndex= 21, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [char], shifts = null
+Row: stateIndex= 22, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(simple_type, 32), (int, 19), (string, 20), (char, 21)]
+Row: stateIndex= 23, action='REDUCE', reduceNonTerminal='compound_statement', reduceContent = [{, statement_list, }], shifts = null
+Row: stateIndex= 24, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(;, 33)]
+Row: stateIndex= 25, action='REDUCE', reduceNonTerminal='statement_list', reduceContent = [statement, ;], shifts = null
+Row: stateIndex= 26, action='REDUCE', reduceNonTerminal='declaration', reduceContent = [simple_type, IDENTIFIER], shifts = null
+Row: stateIndex= 27, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(ar_expression, 34)]
+Row: stateIndex= 28, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(condition, 35), (ar_expression, 36)]
+Row: stateIndex= 29, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(condition, 37), (ar_expression, 36)]
+Row: stateIndex= 30, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 38)]
+Row: stateIndex= 31, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 39), (CONST, 40)]
+Row: stateIndex= 32, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 41)]
+Row: stateIndex= 33, action='REDUCE', reduceNonTerminal='statement_list', reduceContent = [statement_list, statement, ;], shifts = null
+Row: stateIndex= 34, action='REDUCE', reduceNonTerminal='assignment_statement', reduceContent = [IDENTIFIER, =, ar_expression], shifts = null
+Row: stateIndex= 35, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 42)]
+Row: stateIndex= 36, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(relation, 43), (<, 44), (<=, 45), (==, 46), (!=, 47), (>=, 48), (>, 49)]
+Row: stateIndex= 37, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 50)]
+Row: stateIndex= 38, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 51)]
+Row: stateIndex= 39, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 52)]
+Row: stateIndex= 40, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 53)]
+Row: stateIndex= 41, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [([, 54)]
+Row: stateIndex= 42, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 55), ({, 4)]
+Row: stateIndex= 43, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(ar_expression, 56)]
+Row: stateIndex= 44, action='REDUCE', reduceNonTerminal='relation', reduceContent = [<], shifts = null
+Row: stateIndex= 45, action='REDUCE', reduceNonTerminal='relation', reduceContent = [<=], shifts = null
+Row: stateIndex= 46, action='REDUCE', reduceNonTerminal='relation', reduceContent = [==], shifts = null
+Row: stateIndex= 47, action='REDUCE', reduceNonTerminal='relation', reduceContent = [!=], shifts = null
+Row: stateIndex= 48, action='REDUCE', reduceNonTerminal='relation', reduceContent = [>=], shifts = null
+Row: stateIndex= 49, action='REDUCE', reduceNonTerminal='relation', reduceContent = [>], shifts = null
+Row: stateIndex= 50, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 57), ({, 4)]
+Row: stateIndex= 51, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [read, (, IDENTIFIER, )], shifts = null
+Row: stateIndex= 52, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [write, (, IDENTIFIER, )], shifts = null
+Row: stateIndex= 53, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [write, (, CONST, )], shifts = null
+Row: stateIndex= 54, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(], 58)]
+Row: stateIndex= 55, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(else, 59)]
+Row: stateIndex= 56, action='REDUCE', reduceNonTerminal='condition', reduceContent = [ar_expression, relation, ar_expression], shifts = null
+Row: stateIndex= 57, action='REDUCE', reduceNonTerminal='while_statement', reduceContent = [while, (, condition, ), compound_statement], shifts = null
+Row: stateIndex= 58, action='REDUCE', reduceNonTerminal='array_declaration', reduceContent = [array, simple_type, IDENTIFIER, [, ]], shifts = null
+Row: stateIndex= 59, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 60), ({, 4)]
+Row: stateIndex= 60, action='REDUCE', reduceNonTerminal='if_statement', reduceContent = [if, (, condition, ), compound_statement, else, compound_statement], shifts = null
+
+States
+
+State transitions
+(0, program) -> 1
+(0, start) -> 2
+(2, compound_statement) -> 3
+(2, {) -> 4
+(4, statement_list) -> 5
+(4, statement) -> 6
+(4, declaration) -> 7
+(4, assignment_statement) -> 8
+(4, if_statement) -> 9
+(4, while_statement) -> 10
+(4, iostmt) -> 11
+(4, simple_type) -> 12
+(4, array_declaration) -> 13
+(4, IDENTIFIER) -> 14
+(4, if) -> 15
+(4, while) -> 16
+(4, read) -> 17
+(4, write) -> 18
+(4, int) -> 19
+(4, string) -> 20
+(4, char) -> 21
+(4, array) -> 22
+(5, }) -> 23
+(5, statement) -> 24
+(5, declaration) -> 7
+(5, assignment_statement) -> 8
+(5, if_statement) -> 9
+(5, while_statement) -> 10
+(5, iostmt) -> 11
+(5, simple_type) -> 12
+(5, array_declaration) -> 13
+(5, IDENTIFIER) -> 14
+(5, if) -> 15
+(5, while) -> 16
+(5, read) -> 17
+(5, write) -> 18
+(5, int) -> 19
+(5, string) -> 20
+(5, char) -> 21
+(5, array) -> 22
+(6, ;) -> 25
+(12, IDENTIFIER) -> 26
+(14, =) -> 27
+(15, () -> 28
+(16, () -> 29
+(17, () -> 30
+(18, () -> 31
+(22, simple_type) -> 32
+(22, int) -> 19
+(22, string) -> 20
+(22, char) -> 21
+(24, ;) -> 33
+(27, ar_expression) -> 34
+(28, condition) -> 35
+(28, ar_expression) -> 36
+(29, condition) -> 37
+(29, ar_expression) -> 36
+(30, IDENTIFIER) -> 38
+(31, IDENTIFIER) -> 39
+(31, CONST) -> 40
+(32, IDENTIFIER) -> 41
+(35, )) -> 42
+(36, relation) -> 43
+(36, <) -> 44
+(36, <=) -> 45
+(36, ==) -> 46
+(36, !=) -> 47
+(36, >=) -> 48
+(36, >) -> 49
+(37, )) -> 50
+(38, )) -> 51
+(39, )) -> 52
+(40, )) -> 53
+(41, [) -> 54
+(42, compound_statement) -> 55
+(42, {) -> 4
+(43, ar_expression) -> 56
+(50, compound_statement) -> 57
+(50, {) -> 4
+(54, ]) -> 58
+(55, else) -> 59
+(59, compound_statement) -> 60
+(59, {) -> 4
+Parsing Table: 
+Row: stateIndex= 0, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(program, 1), (start, 2)]
+Row: stateIndex= 1, action='ACCEPT', reduceNonTerminal='null', reduceContent = null, shifts = null
+Row: stateIndex= 2, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 3), ({, 4)]
+Row: stateIndex= 3, action='REDUCE', reduceNonTerminal='program', reduceContent = [start, compound_statement], shifts = null
+Row: stateIndex= 4, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(statement_list, 5), (statement, 6), (declaration, 7), (assignment_statement, 8), (if_statement, 9), (while_statement, 10), (iostmt, 11), (simple_type, 12), (array_declaration, 13), (IDENTIFIER, 14), (if, 15), (while, 16), (read, 17), (write, 18), (int, 19), (string, 20), (char, 21), (array, 22)]
+Row: stateIndex= 5, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(}, 23), (statement, 24), (declaration, 7), (assignment_statement, 8), (if_statement, 9), (while_statement, 10), (iostmt, 11), (simple_type, 12), (array_declaration, 13), (IDENTIFIER, 14), (if, 15), (while, 16), (read, 17), (write, 18), (int, 19), (string, 20), (char, 21), (array, 22)]
+Row: stateIndex= 6, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(;, 25)]
+Row: stateIndex= 7, action='REDUCE', reduceNonTerminal='statement', reduceContent = [declaration], shifts = null
+Row: stateIndex= 8, action='REDUCE', reduceNonTerminal='statement', reduceContent = [assignment_statement], shifts = null
+Row: stateIndex= 9, action='REDUCE', reduceNonTerminal='statement', reduceContent = [if_statement], shifts = null
+Row: stateIndex= 10, action='REDUCE', reduceNonTerminal='statement', reduceContent = [while_statement], shifts = null
+Row: stateIndex= 11, action='REDUCE', reduceNonTerminal='statement', reduceContent = [iostmt], shifts = null
+Row: stateIndex= 12, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 26)]
+Row: stateIndex= 13, action='REDUCE', reduceNonTerminal='declaration', reduceContent = [array_declaration], shifts = null
+Row: stateIndex= 14, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(=, 27)]
+Row: stateIndex= 15, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 28)]
+Row: stateIndex= 16, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 29)]
+Row: stateIndex= 17, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 30)]
+Row: stateIndex= 18, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [((, 31)]
+Row: stateIndex= 19, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [int], shifts = null
+Row: stateIndex= 20, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [string], shifts = null
+Row: stateIndex= 21, action='REDUCE', reduceNonTerminal='simple_type', reduceContent = [char], shifts = null
+Row: stateIndex= 22, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(simple_type, 32), (int, 19), (string, 20), (char, 21)]
+Row: stateIndex= 23, action='REDUCE', reduceNonTerminal='compound_statement', reduceContent = [{, statement_list, }], shifts = null
+Row: stateIndex= 24, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(;, 33)]
+Row: stateIndex= 25, action='REDUCE', reduceNonTerminal='statement_list', reduceContent = [statement, ;], shifts = null
+Row: stateIndex= 26, action='REDUCE', reduceNonTerminal='declaration', reduceContent = [simple_type, IDENTIFIER], shifts = null
+Row: stateIndex= 27, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(ar_expression, 34)]
+Row: stateIndex= 28, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(condition, 35), (ar_expression, 36)]
+Row: stateIndex= 29, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(condition, 37), (ar_expression, 36)]
+Row: stateIndex= 30, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 38)]
+Row: stateIndex= 31, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 39), (CONST, 40)]
+Row: stateIndex= 32, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(IDENTIFIER, 41)]
+Row: stateIndex= 33, action='REDUCE', reduceNonTerminal='statement_list', reduceContent = [statement_list, statement, ;], shifts = null
+Row: stateIndex= 34, action='REDUCE', reduceNonTerminal='assignment_statement', reduceContent = [IDENTIFIER, =, ar_expression], shifts = null
+Row: stateIndex= 35, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 42)]
+Row: stateIndex= 36, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(relation, 43), (<, 44), (<=, 45), (==, 46), (!=, 47), (>=, 48), (>, 49)]
+Row: stateIndex= 37, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 50)]
+Row: stateIndex= 38, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 51)]
+Row: stateIndex= 39, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 52)]
+Row: stateIndex= 40, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(), 53)]
+Row: stateIndex= 41, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [([, 54)]
+Row: stateIndex= 42, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 55), ({, 4)]
+Row: stateIndex= 43, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(ar_expression, 56)]
+Row: stateIndex= 44, action='REDUCE', reduceNonTerminal='relation', reduceContent = [<], shifts = null
+Row: stateIndex= 45, action='REDUCE', reduceNonTerminal='relation', reduceContent = [<=], shifts = null
+Row: stateIndex= 46, action='REDUCE', reduceNonTerminal='relation', reduceContent = [==], shifts = null
+Row: stateIndex= 47, action='REDUCE', reduceNonTerminal='relation', reduceContent = [!=], shifts = null
+Row: stateIndex= 48, action='REDUCE', reduceNonTerminal='relation', reduceContent = [>=], shifts = null
+Row: stateIndex= 49, action='REDUCE', reduceNonTerminal='relation', reduceContent = [>], shifts = null
+Row: stateIndex= 50, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 57), ({, 4)]
+Row: stateIndex= 51, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [read, (, IDENTIFIER, )], shifts = null
+Row: stateIndex= 52, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [write, (, IDENTIFIER, )], shifts = null
+Row: stateIndex= 53, action='REDUCE', reduceNonTerminal='iostmt', reduceContent = [write, (, CONST, )], shifts = null
+Row: stateIndex= 54, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(], 58)]
+Row: stateIndex= 55, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(else, 59)]
+Row: stateIndex= 56, action='REDUCE', reduceNonTerminal='condition', reduceContent = [ar_expression, relation, ar_expression], shifts = null
+Row: stateIndex= 57, action='REDUCE', reduceNonTerminal='while_statement', reduceContent = [while, (, condition, ), compound_statement], shifts = null
+Row: stateIndex= 58, action='REDUCE', reduceNonTerminal='array_declaration', reduceContent = [array, simple_type, IDENTIFIER, [, ]], shifts = null
+Row: stateIndex= 59, action='SHIFT', reduceNonTerminal='null', reduceContent = null, shifts = [(compound_statement, 60), ({, 4)]
+Row: stateIndex= 60, action='REDUCE', reduceNonTerminal='if_statement', reduceContent = [if, (, condition, ), compound_statement, else, compound_statement], shifts = null
+

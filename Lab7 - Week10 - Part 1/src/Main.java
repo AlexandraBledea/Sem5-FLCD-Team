@@ -1,6 +1,5 @@
 import javax.swing.*;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -76,15 +75,18 @@ public class Main {
                     CanonicalCollection canonicalCollection = lrAlg.canonicalCollection();
 
                     System.out.println("States");
+                    writeToFile("Input_Output/ParseOutput.txt", "States");
 
                     for(int i = 0; i < canonicalCollection.getStates().size(); i++){
                         System.out.println(i + " " + canonicalCollection.getStates().get(i));
                     }
 
                     System.out.println("\nState transitions");
+                    writeToFile("Input_Output/ParseOutput.txt", "\nState transitions");
 
                     for(Map.Entry<Pair<Integer, String>, Integer> entry: canonicalCollection.getAdjacencyList().entrySet()){
                         System.out.println(entry.getKey() + " -> " + entry.getValue());
+                        writeToFile("Input_Output/ParseOutput.txt", entry.getKey() + " -> " + entry.getValue());
                     }
 
                     System.out.println();
@@ -92,31 +94,33 @@ public class Main {
                     ParsingTable parsingTable = lrAlg.getParsingTable(canonicalCollection);
                     if(parsingTable.entries.size() == 0){
                         System.out.println("We have conflicts in the parsing table so we can't go further with the algorithm");
+                        writeToFile("Input_Output/ParseOutput.txt", "We have conflicts in the parsing table so we can't go further with the algorithm");
                     }
                     else {
                         System.out.println(parsingTable.toString());
+                        writeToFile("Input_Output/ParseOutput.txt", parsingTable.toString());
                     }
 
-                    Stack<String> word = new Stack<>();
-//                    word.add("c");
-//                    word.add("b");
-//                    word.add("b");
-//                    word.add("a");
+                    Stack<String> word;
 
-                    word.add("}");
-                    word.add(";");
-                    word.add("CONST");
-                    word.add("=");
-                    word.add("IDENTIFIER");
-                    word.add("int");
-                    word.add(";");
-                    word.add("]");
-                    word.add("[");
-                    word.add("IDENTIFIER");
-                    word.add("int");
-                    word.add("array");
-                    word.add("{");
-                    word.add("start");
+//                    word.add("}");
+//                    word.add(";");
+//                    word.add("CONST");
+//                    word.add("=");
+//                    word.add("IDENTIFIER");
+//                    word.add("int");
+//                    word.add(";");
+//                    word.add("]");
+//                    word.add("[");
+//                    word.add("IDENTIFIER");
+//                    word.add("int");
+//                    word.add("array");
+//                    word.add("{");
+//                    word.add("start");
+
+                    word = readFirstElemFromFile("Input_Output/WordInput.txt");
+                    System.out.println("Printing words " + word);
+
                     lrAlg.parse(word, parsingTable);
 
                     break;
@@ -155,6 +159,51 @@ public class Main {
                 break;
 
         }
+    }
+
+    public static Stack<String> readFromFile(String filename) {
+        BufferedReader reader;
+        Stack<String> wordStack = new Stack<String>();
+        try {
+            reader = new BufferedReader(new FileReader(filename));
+            String line = reader.readLine();
+            while(line != null) {
+                wordStack.add(line);
+                line = reader.readLine();
+            }
+            return wordStack;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Stack<String> readFirstElemFromFile(String filename) {
+        BufferedReader reader;
+        Stack<String> wordStack = new Stack<String>();
+        ArrayList<String> normal = new ArrayList<>();
+        try {
+            reader = new BufferedReader(new FileReader(filename));
+            String line = reader.readLine();
+            while(line != null) {
+                String[] split = line.split("\\s+");
+                normal.add(split[0]);
+                line = reader.readLine();
+            }
+            for(int i = normal.size() -1; i>=0 ; i--) {
+                wordStack.add(normal.get(i));
+            }
+            return wordStack;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void writeToFile(String file, String line) throws IOException {
+        FileWriter fw = new FileWriter(file, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(line);
+        bw.newLine();
+        bw.close();
     }
 
     public static void main(String[] args) throws Exception {
