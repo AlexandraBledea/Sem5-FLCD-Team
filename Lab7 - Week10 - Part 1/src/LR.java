@@ -137,8 +137,9 @@ public class LR {
 
     /**
      * With this method we create the parsing table, if possible and detect conflicts if there are any
+     *
      * @return - the parsing table corresponding to the parsed grammar if we don't have conflicts
-     *         - otherwise, return a table with no rows in it
+     * - otherwise, return a table with no rows in it
      */
     public Table getParsingTable(CanonicalCollection canonicalCollection) {
         Table table = new Table();
@@ -146,7 +147,7 @@ public class LR {
         boolean foundConflicts = false;
 
         //SHIFT CASE ACTION
-        for(Map.Entry<Pair<Integer, String>, Integer> entry: canonicalCollection.getAdjacencyList().entrySet()) {
+        for (Map.Entry<Pair<Integer, String>, Integer> entry : canonicalCollection.getAdjacencyList().entrySet()) {
 
             Pair<Integer, String> key = entry.getKey();
             Integer value = entry.getValue();
@@ -163,15 +164,15 @@ public class LR {
                 table.tableRow.get(key.getFirst()).getGoTo().put(key.getSecond(), value);
             }
 
-            if(state.getStateActionType() == StateActionType.SHIFT_REDUCE_CONFLICT || state.getStateActionType() == StateActionType.REDUCE_REDUCE_CONFLICT){
+            if (state.getStateActionType() == StateActionType.SHIFT_REDUCE_CONFLICT || state.getStateActionType() == StateActionType.REDUCE_REDUCE_CONFLICT) {
                 foundConflicts = true;
                 Integer stateIndex = key.getFirst();
 
-                for(Map.Entry<Pair<Integer, String>, Integer> e2: canonicalCollection.getAdjacencyList().entrySet()) {
+                for (Map.Entry<Pair<Integer, String>, Integer> e2 : canonicalCollection.getAdjacencyList().entrySet()) {
                     Pair<Integer, String> k2 = e2.getKey();
                     Integer v2 = e2.getValue();
 
-                    if(v2.equals(stateIndex)){
+                    if (v2.equals(stateIndex)) {
                         System.out.println("STATE INDEX -> " + stateIndex);
                         System.out.println("SYMBOL -> " + k2.getSecond());
                         System.out.println("INITIAL STATE -> " + k2.getFirst());
@@ -186,20 +187,20 @@ public class LR {
         }
 
         // We go through each state and check if its action is REDUCE or ACCEPT
-        for(int i = 0; i < canonicalCollection.getStates().size(); i++){
+        for (int i = 0; i < canonicalCollection.getStates().size(); i++) {
 
             State state = canonicalCollection.getStates().get(i);
 
             // REDUCE CASE ACTION
 
-            if(state.getStateActionType() == StateActionType.REDUCE){
+            if (state.getStateActionType() == StateActionType.REDUCE) {
                 // If the action is reduce, we look for the production index of the reduction
-                Integer integer = orderedProductions.indexOf(new Pair<>(((Item)state.getItems().toArray()[0]).getLeftHandSide(), (((Item) state.getItems().toArray()[0]).getRightHandSide())));
+                Integer integer = orderedProductions.indexOf(new Pair<>(((Item) state.getItems().toArray()[0]).getLeftHandSide(), (((Item) state.getItems().toArray()[0]).getRightHandSide())));
                 table.tableRow.put(i, new Row(state.getStateActionType(), null, integer));
             }
 
             // ACCEPT CASE ACTION
-            if(state.getStateActionType() == StateActionType.ACCEPT){
+            if (state.getStateActionType() == StateActionType.ACCEPT) {
                 table.tableRow.put(i, new Row(state.getStateActionType(), null, null));
             }
 
@@ -208,11 +209,92 @@ public class LR {
         // We order the table rows based on the state index (increasing order)
         table.tableRow = new TreeMap<>(table.tableRow);
 
-        if(foundConflicts){
+        if (foundConflicts) {
             return new Table();
         }
 
         return table;
+    }
+
+    public List<ParsingTreeRow> parse(Stack<String> inputStack, Table parsingTable) throws Exception {
+        Stack<Pair<String, Integer>> workingStack = new Stack<>();
+        Stack<Integer> outputBand = new Stack<>();
+
+        workingStack.add(new Pair<>("$", 0));
+
+        List<ParsingTreeRow> parsingTree = new ArrayList<>();
+        Stack<Pair<String, Integer>> treeStack = new Stack<>();
+        int currentIndex = 0;
+
+        while (!inputStack.isEmpty() || !workingStack.isEmpty()) {
+            Row tableRow = parsingTable.tableRow.get(workingStack.peek().getSecond());
+            switch (tableRow.action) {
+                case SHIFT:
+                    try
+                    {
+                        String token = inputStack.peek();
+                        Map<String, Integer> goTo = tableRow.getGoTo();
+
+                        if(!goTo.containsKey(token)){
+                            throw new Exception("Invalid symbol " + token + " for goto of state " + workingStack.peek().getSecond());
+                        }
+
+                        Integer stateIndex = goTo.get(token);
+
+                        workingStack.add(new Pair<>(token, stateIndex));
+                        inputStack.pop();
+
+                        treeStack.add(new Pair<>(token, currentIndex++));
+
+                    } catch (Exception e) {
+                        throw new Exception("Action is shift but nothing else is left in the remaining stack");
+                    }
+                    break;
+
+                case ACCEPT:
+                    Pair<String, Integer> lastElement = treeStack.pop();
+                    parsingTree.add(new ParsingTreeRow(
+                            lastElement.getSecond(), lastElement.getFirst(), -1, -1)
+                        );
+                    return parsingTree;
+
+                case REDUCE:
+                    Pair<String, List<String>> productionToReduceTo = orderedProductions.get(tableRow.reductionIndex);
+
+                    Integer parentIndex = currentIndex++;
+                    Integer lastIndex = -1;
+
+                    for(int j = 0; j < productionToReduceTo.getSecond().size(); j++){
+                        workingStack.pop();
+                        Pair<String, Integer> lastElementReduce = treeStack.pop();
+
+                        parsingTree.add(
+                                new ParsingTreeRow(lastElementReduce.getSecond(), lastElementReduce.getFirst(), parentIndex, lastIndex)
+                        );
+
+                        lastIndex = lastElementReduce.getSecond();
+
+                    }
+
+                    treeStack.add(new Pair<>(productionToReduceTo.getFirst(), parentIndex));
+
+                    Pair<String, Integer> previous = workingStack.peek();
+
+                    workingStack.add(
+                            new Pair<>(
+                                    productionToReduceTo.getFirst(),
+                                    parsingTable.tableRow.get(previous.getSecond()).getGoTo().get(productionToReduceTo.getFirst())
+
+                            )
+                    );
+
+                    outputBand.add(0, tableRow.reductionIndex);
+
+                    break;
+            }
+        }
+        throw new Exception("Wrong place to be...");
+
     }
 
 

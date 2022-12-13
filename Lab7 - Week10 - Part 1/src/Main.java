@@ -1,10 +1,7 @@
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 public class Main {
@@ -100,6 +97,26 @@ public class Main {
                         System.out.println(parsingTable);
                     }
 
+                    Stack<String> word = new Stack<>();
+//                    word.add("c");
+//                    word.add("b");
+//                    word.add("b");
+//                    word.add("a");
+                    word.add("}");
+                    word.add(";");
+                    word.add("CONST");
+                    word.add("=");
+                    word.add("IDENTIFIER");
+                    word.add("int");
+                    word.add("{");
+                    word.add("start");
+                    word.add("program");
+
+                    List<ParsingTreeRow> parseTree = lrAlg.parse(word, parsingTable);
+
+                    for(ParsingTreeRow row: parseTree){
+                        System.out.println(row.getIndex() + ": " + row.getInfo() + ", " + row.getParent() + ", " + row.getRightSibling());
+                    }
 
                     break;
                 case 8:

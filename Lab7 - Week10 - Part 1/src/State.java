@@ -50,7 +50,7 @@ public class State {
         } else if(items.size() == 1 && ((Item) items.toArray()[0]).getRightHandSide().size() == ((Item) items.toArray()[0]).getPositionForDot())
         {
             this.stateActionType = StateActionType.REDUCE;
-        } else if(items.size() > 1 && this.items.stream().allMatch(i -> i.getRightHandSide().size() > i.getPositionForDot())){
+        } else if(items.size() >= 1 && this.items.stream().allMatch(i -> i.getRightHandSide().size() > i.getPositionForDot())){
             this.stateActionType = StateActionType.SHIFT;
         } else if(items.size() > 1 && this.items.stream().allMatch(i -> i.getRightHandSide().size() == i.getPositionForDot())){
             this.stateActionType = StateActionType.REDUCE_REDUCE_CONFLICT;
