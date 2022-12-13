@@ -148,13 +148,21 @@ public class LR {
 
             State state = this.canonicalCollection().getStates().get(i);
 
+            // We create a new row entry for our parsing table
             RowTable row = new RowTable();
 
+            // We set the number of the state (the index)
             row.stateIndex = i;
 
+
+            // We set the action of the state (SHIFT/REDUCE/ACCEPT)
             row.action = state.getStateActionType();
+
+            // We initialize the shifts list, in case there will be the case to add them.
             row.shifts = new ArrayList<>();
 
+            // If we have any of the two conflicts, we display the state and the symbol and stop the algorithm
+            // If we have conflicts we cant go further
             if (state.getStateActionType() == StateActionType.SHIFT_REDUCE_CONFLICT || state.getStateActionType() == StateActionType.REDUCE_REDUCE_CONFLICT) {
                 for (Map.Entry<Pair<Integer, String>, Integer> e2 : canonicalCollection.getAdjacencyList().entrySet()) {
                     Pair<Integer, String> k2 = e2.getKey();
@@ -171,6 +179,10 @@ public class LR {
                 }
                 parsingTable.entries = new ArrayList<>();
                 return parsingTable;
+
+                // If the action is REDUCE, it means the state has only one item, which has the dot at the end
+                // So we set the reduceNonTerminal, which is the left hand side and also set the reduce content which
+                // is the right hand side
             } else if (state.getStateActionType() == StateActionType.REDUCE) {
                 Item item = state.getItems().stream().filter(Item::dotIsLast).findAny().orElse(null);
                 if (item != null) {
@@ -180,10 +192,14 @@ public class LR {
                 } else {
                     throw new Exception("How did you even get here?");
                 }
+                // If the action is ACCEPT, we just initialize all the other left fields with null, because the action was
+                // set in the beginning
             } else if (state.getStateActionType() == StateActionType.ACCEPT) {
                 row.reduceContent = null;
                 row.reduceNonTerminal = null;
                 row.shifts = null;
+                // If the action is SHIFT, we need to look for all the new states that are created from the intial
+                // state and add them to the shifts list
             } else if (state.getStateActionType() == StateActionType.SHIFT) {
 
                 List<Pair<String, Integer>> goTos = new ArrayList<>();
@@ -301,7 +317,7 @@ public class LR {
         }
 
     }
-    
+
     public Grammar getGrammar() {
         return grammar;
     }

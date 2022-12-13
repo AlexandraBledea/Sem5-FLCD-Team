@@ -102,11 +102,8 @@ public class Main {
 //                    word.add("b");
 //                    word.add("b");
 //                    word.add("a");
+
                     word.add("}");
-//                    word.add(";");
-//                    word.add("CONST");
-//                    word.add("=");
-//                    word.add("IDENTIFIER");
                     word.add(";");
                     word.add("IDENTIFIER");
                     word.add("int");
@@ -118,12 +115,7 @@ public class Main {
                     word.add("array");
                     word.add("{");
                     word.add("start");
-//
                     lrAlg.parse(word, parsingTable);
-//
-//                    for(ParsingTreeRow row: parseTree){
-//                        System.out.println(row.getIndex() + ": " + row.getInfo() + ", " + row.getParent() + ", " + row.getRightSibling());
-//                    }
 
                     break;
                 case 8:
