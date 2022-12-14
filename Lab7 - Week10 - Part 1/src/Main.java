@@ -82,6 +82,8 @@ public class Main {
                     System.out.println("\n\nIs it a context free grammar (CFG) ? " + grammar.isCFG());
                     break;
                 case 7:
+                    emptyFile("Input_Output/Out1.txt");
+
                     Grammar grammar1 = new Grammar("Input_Output/G1.txt");
                     LR lrAlg = new LR(grammar1);
 
@@ -122,7 +124,7 @@ public class Main {
 
                 case 8:
 
-                    emptyFile("Input_Output/Out1.txt");
+
 
                     Grammar grammar2 = new Grammar("Input_Output/G2.txt");
                     LR lrAlg2 = new LR(grammar2);

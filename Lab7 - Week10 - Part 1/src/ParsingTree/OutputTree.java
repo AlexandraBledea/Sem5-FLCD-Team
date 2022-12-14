@@ -3,6 +3,9 @@ package ParsingTree;
 import LR0.Grammar;
 import Utils.Pair;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,17 +125,26 @@ public class OutputTree {
         }
     }
 
-    public void printTree(ParsingTreeRow node){
+    public void printTree(ParsingTreeRow node, String filePath) throws IOException {
         this.treeList = new ArrayList<>();
         createList(node);
 
-        for(int i = 0; i < this.maxLevel; i++){
+        for(int i = 0; i <= this.maxLevel; i++){
             for(ParsingTreeRow n: this.treeList){
                 if(n.getLevel() == i){
                     System.out.println(n);
+                    writeToFile(filePath, n.toString());
                 }
             }
         }
+    }
+
+    public void writeToFile(String file, String line) throws IOException {
+        FileWriter fw = new FileWriter(file, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write(line);
+        bw.newLine();
+        bw.close();
     }
 
     public void createList(ParsingTreeRow node){

@@ -2,6 +2,7 @@ package LR0;
 
 import ParsingTable.ParsingTable;
 import ParsingTable.RowTable;
+import ParsingTree.OutputTree;
 import State.*;
 import Utils.Pair;
 
@@ -239,7 +240,7 @@ public class LR {
     }
 
 
-    public void parse(Stack<String> inputStack, ParsingTable parsingTable, String filePath){
+    public void parse(Stack<String> inputStack, ParsingTable parsingTable, String filePath) throws IOException {
         Stack<Pair<String, Integer>> workingStack = new Stack<>();
         Stack<String> outputStack = new Stack<>();
         Stack<Integer> outputNumberStack = new Stack<>();
@@ -321,6 +322,13 @@ public class LR {
                         System.out.println("Production number: " + numberOutput);
                         writeToFile(filePath, "Production number: " + numberOutput);
 
+                        OutputTree outputTree = new OutputTree(grammar);
+                        outputTree.generateTreeFromSequence(numberOutput);
+                        System.out.println("The output tree: ");
+                        writeToFile(filePath, "The output tree: ");
+                        outputTree.printTree(outputTree.getRoot(), filePath);
+
+
                         sem = false;
                     }
 
@@ -329,6 +337,10 @@ public class LR {
         } catch (NullPointerException ex){
             System.out.println("ERROR at state " + stateIndex + " - before symbol " + onErrorSymbol);
             System.out.println(lastRow);
+
+            writeToFile(filePath, "ERROR at state " + stateIndex + " - before symbol " + onErrorSymbol);
+            writeToFile(filePath, lastRow.toString());
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
